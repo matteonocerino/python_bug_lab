@@ -162,7 +162,7 @@ def sum_even_numbers(numbers: list) -> int:
     total = 0
     for n in numbers:
         # BUG: Condition checks for odd numbers
-        if n % 2 != 0:
+        if n % 2 == 0:
             total += n
     return total
 
