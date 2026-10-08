@@ -238,7 +238,7 @@ def format_currency_usd(amount: float) -> str:
     Expected: format_currency_usd(19.9) -> "$19.90"
     """
     # BUG: .1f instead of .2f
-    return f"${amount:.1f}"
+    return f"${amount:.2f}"
 
 
 def calculate_ticket_price(age: int) -> float:
