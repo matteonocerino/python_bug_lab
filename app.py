@@ -228,7 +228,7 @@ def is_valid_password_length(password: str) -> bool:
     Expected: "short" -> False, "strongpassword123" -> True.
     """
     # BUG: Inverted condition
-    return len(password) < 8
+    return len(password) >= 8
 
 
 def format_currency_usd(amount: float) -> str:
