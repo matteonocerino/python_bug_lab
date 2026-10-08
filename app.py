@@ -150,7 +150,7 @@ def remove_duplicates_preserve_order(items: list) -> list:
     Expected: [3, 1, 2, 3, 2] -> [3, 1, 2]
     """
     # BUG: list(set(items)) does not guarantee order preservation
-    return list(set(items))
+    return list(dict.fromkeys(items))
 
 
 def sum_even_numbers(numbers: list) -> int:
