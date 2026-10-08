@@ -200,7 +200,13 @@ def is_leap_year(year: int) -> bool:
     Expected: 2000 -> True, 2024 -> True, 1900 -> False, 2100 -> False.
     """
     # BUG: Incomplete leap year rule
-    return year % 4 == 0
+    if year % 400 == 0:
+        return True
+    elif year % 100 == 0:
+        return False
+    elif year % 4 == 0:
+        return True
+    return False
 
 
 def calculate_average(numbers: list) -> float:
