@@ -42,7 +42,7 @@ def discount_price(price: float, discount_percent: float) -> float:
     """
     # BUG: Computes discount amount, forgets to subtract from price
     discount_amount = price * (discount_percent / 100.0)
-    return discount_amount
+    return price - discount_amount
 
 
 def find_max_number(numbers: list) -> int:
@@ -52,7 +52,7 @@ def find_max_number(numbers: list) -> int:
     Expected: find_max_number([-10, -5, -20]) -> -5
     """
     # BUG: Initializing to 0 fails for all-negative lists
-    current_max = 0
+    current_max = numbers[0]
     for n in numbers:
         if n > current_max:
             current_max = n
@@ -66,7 +66,7 @@ def calculate_bmi(weight_kg: float, height_m: float) -> float:
     Expected: calculate_bmi(70, 1.75) -> ~22.86
     """
     # BUG: Missing height squared
-    return round(weight_kg / height_m, 2)
+    return round(weight_kg / (height_m**2), 2)
 
 
 # =====================================================================
@@ -80,7 +80,7 @@ def is_palindrome(text: str) -> bool:
     Expected: Case-insensitive check (e.g. "Racecar" -> True).
     """
     # BUG: Compares without lowercasing
-    cleaned = text.replace(" ", "")
+    cleaned = text.lower().replace(" ", "")
     return cleaned == cleaned[::-1]
 
 
@@ -91,7 +91,7 @@ def count_vowels(text: str) -> int:
     Expected: count_vowels("umbrella") -> 3
     """
     # BUG: Missing 'u' in vowels
-    vowels = "aeioAEIO"
+    vowels = "aeiouAEIOU"
     return sum(1 for char in text if char in vowels)
 
 
@@ -104,7 +104,7 @@ def truncate_text(text: str, max_len: int) -> str:
     if len(text) <= max_len:
         return text
     # BUG: Takes max_len characters THEN appends 3 dots (exceeding max_len)
-    return text[:max_len] + "..."
+    return text[:max_len - 3] + "..."
 
 
 def reverse_words(sentence: str) -> str:
@@ -114,7 +114,7 @@ def reverse_words(sentence: str) -> str:
     Expected: reverse_words("Hello World") -> "World Hello"
     """
     # BUG: Reverses character stream instead of words
-    return sentence[::-1]
+    return " ".join(sentence.split()[::-1])
 
 
 def get_file_extension(filename: str) -> str:
@@ -125,7 +125,7 @@ def get_file_extension(filename: str) -> str:
     """
     if "." not in filename:
         # BUG: Returns original filename instead of empty string
-        return filename
+        return ""
     return filename.split(".")[-1]
 
 
@@ -140,7 +140,7 @@ def get_top_students(grades: list, n: int) -> list:
     Expected: get_top_students(["Alice", "Bob", "Charlie", "David"], 2) -> ["Alice", "Bob"]
     """
     # BUG: Slices up to n-1 instead of n
-    return grades[: n - 1]
+    return grades[:n]
 
 
 def remove_duplicates_preserve_order(items: list) -> list:
@@ -150,7 +150,7 @@ def remove_duplicates_preserve_order(items: list) -> list:
     Expected: [3, 1, 2, 3, 2] -> [3, 1, 2]
     """
     # BUG: list(set(items)) does not guarantee order preservation
-    return list(set(items))
+    return list(dict.fromkeys(items))
 
 
 def sum_even_numbers(numbers: list) -> int:
@@ -162,7 +162,7 @@ def sum_even_numbers(numbers: list) -> int:
     total = 0
     for n in numbers:
         # BUG: Condition checks for odd numbers
-        if n % 2 != 0:
+        if n % 2 == 0:
             total += n
     return total
 
@@ -174,8 +174,9 @@ def merge_two_dicts(d1: dict, d2: dict) -> dict:
     Expected: Merged dict returned, d1 remains unchanged.
     """
     # BUG: Mutates d1 directly
-    d1.update(d2)
-    return d1
+    merged = d1.copy()
+    merged.update(d2)
+    return merged
 
 
 def filter_positive_numbers(numbers: list) -> list:
@@ -185,7 +186,7 @@ def filter_positive_numbers(numbers: list) -> list:
     Expected: filter_positive_numbers([-2, 0, 3, -1, 5]) -> [3, 5]
     """
     # BUG: >= includes 0, which is not positive
-    return [n for n in numbers if n >= 0]
+    return [n for n in numbers if n > 0]
 
 
 # =====================================================================
@@ -199,7 +200,13 @@ def is_leap_year(year: int) -> bool:
     Expected: 2000 -> True, 2024 -> True, 1900 -> False, 2100 -> False.
     """
     # BUG: Incomplete leap year rule
-    return year % 4 == 0
+    if year % 400 == 0:
+        return True
+    elif year % 100 == 0:
+        return False
+    elif year % 4 == 0:
+        return True
+    return False
 
 
 def calculate_average(numbers: list) -> float:
@@ -209,6 +216,8 @@ def calculate_average(numbers: list) -> float:
     Expected: Should return 0.0 for an empty list.
     """
     # BUG: No check for empty list before division
+    if not numbers:
+        return 0.0
     return sum(numbers) / len(numbers)
 
 
@@ -219,7 +228,7 @@ def is_valid_password_length(password: str) -> bool:
     Expected: "short" -> False, "strongpassword123" -> True.
     """
     # BUG: Inverted condition
-    return len(password) < 8
+    return len(password) >= 8
 
 
 def format_currency_usd(amount: float) -> str:
@@ -229,7 +238,7 @@ def format_currency_usd(amount: float) -> str:
     Expected: format_currency_usd(19.9) -> "$19.90"
     """
     # BUG: .1f instead of .2f
-    return f"${amount:.1f}"
+    return f"${amount:.2f}"
 
 
 def calculate_ticket_price(age: int) -> float:
@@ -244,6 +253,6 @@ def calculate_ticket_price(age: int) -> float:
     if age < 12:
         return 5.0
     # BUG: Condition checks age < 65 instead of age >= 65
-    elif age < 65:
+    elif age >= 65:
         return 7.0
     return 12.0
